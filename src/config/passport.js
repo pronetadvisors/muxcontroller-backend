@@ -1,5 +1,5 @@
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
-import models from '../models'
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import models from '../models';
 
 const Users = models.User;
 
@@ -11,16 +11,16 @@ opts.secretOrKey = 'secret';
 
 // create jwt strategy
 module.exports = passport => {
-    passport.use(
-        new JwtStrategy(opts, (jwt_payload, done) => {
-            Users.findAll({ where: { user_id: jwt_payload.user_id } })
-                .then(user => {
-                    if (user.length) {
-                        return done(null, user);
-                    }
-                    return done(null, false);
-                })
-                .catch(err => console.log(err));
-        })
-    );
+	passport.use(
+		new JwtStrategy(opts, (jwt_payload, done) => {
+			Users.findAll({ where: { user_id: jwt_payload.user_id } })
+				.then(user => {
+					if (user.length) {
+						return done(null, user);
+					}
+					return done(null, false);
+				})
+				.catch(err => console.log(err));
+		})
+	);
 };

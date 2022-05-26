@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "author": "Raaj Patel",
-  "license": "MIT",
+  "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "clean": "rm -rf build && mkdir build",
     "dev": "nodemon --exec babel-node src/index.js",
     "build-server": "babel -d ./build ./src -s",
     "build": "npm run clean && npm run build-server",
     "start": "node ./build/index.js",
-    "debug": "node --debug ./build/index.js"
+    "debug": "node --debug ./build/index.js",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix"
   },
   "dependencies": {
     "@mux/mux-node": "^5.0.0-rc.5",

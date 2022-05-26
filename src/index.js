@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import cors from 'cors';
-import models from './models'
+import models from './models';
 
 const app = express();
 
@@ -17,7 +17,7 @@ app.use(cors());
 // force: true will drop the table if it already exits
 // models.sequelize.sync({ force: true }).then(() => {
 models.sequelize.sync().then(() => {
-    console.log('Drop and Resync with {force: true}');
+	console.log('Drop and Resync with {force: true}');
 });
 
 // passport middleware
@@ -40,8 +40,8 @@ require('./routes/policyClass.js')(app);
 
 //create a server
 var server = app.listen(port, function() {
-    var host = server.address().address;
-    var port = server.address().port;
+	var host = server.address().address;
+	var port = server.address().port;
 
-    console.log('App listening at http://%s:%s', host, port);
+	console.log('App listening at http://%s:%s', host, port);
 });

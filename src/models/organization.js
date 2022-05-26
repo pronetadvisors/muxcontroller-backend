@@ -1,25 +1,25 @@
 import {Data} from "@mux/mux-node/dist/data/data";
 
 export default (sequelize, DataTypes) => {
-    const Organization = sequelize.define(
-        'Organization',
-        {
-            id: {
-                type: DataTypes.INTEGER,
-                autoIncrement: true,
-                primaryKey: true
-            },
-            name: DataTypes.STRING,
-            email: DataTypes.STRING,
-            mux_accessToken: DataTypes.STRING,
-            mux_secret: DataTypes.STRING,
-        },
-        {}
-    );
+	const Organization = sequelize.define(
+		'Organization',
+		{
+			id: {
+				type: DataTypes.INTEGER,
+				autoIncrement: true,
+				primaryKey: true
+			},
+			name: DataTypes.STRING,
+			email: DataTypes.STRING,
+			mux_accessToken: DataTypes.STRING,
+			mux_secret: DataTypes.STRING,
+		},
+		{}
+	);
 
-    Organization.associate = function(models) {
-        // associations go here
-    };
+	Organization.associate = function(models) {
+		// associations go here
+	};
 
-    return Organization;
+	return Organization;
 };

@@ -1,8 +1,8 @@
-import { getPolicyClass } from '../controllers/policyClass'
+import { getPolicyClass } from '../controllers/policyClass';
 
 module.exports = (app) => {
-    app.get('/api/class-types/all', getPolicyClass)
-}
+	app.get('/api/class-types/all', getPolicyClass);
+};
 
 // 1. Basis Info
 // 2. Detail Info
