@@ -57,7 +57,6 @@ const create = (req, res) => {
 
 const login = (req, res) => {
 	const { errors, isValid } = validateLoginForm(req.body);
-
 	// check validation
 	if(!isValid) {
 		return res.status(400).json(errors);
@@ -85,12 +84,8 @@ const login = (req, res) => {
 				.compare(password, originalPassword)
 				.then(isMatch => {
 					if (isMatch) {
-						// user matched
-						console.log('matched!');
 						const { user_id, username } = user[0].dataValues;
 						const payload = { user_id, username }; //jwt payload
-						// console.log(payload)
-						// console.log(payload)
 
 						jwt.sign(payload, 'secret', {
 							expiresIn: 3600
@@ -112,24 +107,39 @@ const login = (req, res) => {
 // fetch all users
 const findAllUsers = (req, res) => {
 	User.findAll()
-		.then(user => {
-			res.json({ user });
+		.then(users => {
+			res.json({ users });
 		})
 		.catch(err => res.status(500).json({ err }));
 };
 
-// fetch user by userId
-const findById = (req, res) => {
-	const user_id = req.params.userId;
+// fetch all users in X organization
+const findAllUsersInOrg = (req, res) => {
+	const org_id = req.params.orgId;
 
-	User.findAll({ where: { user_id } })
-		.then(user => {
-			if(!user.length) {
-				return res.json({ msg: 'user not found'});
-			}
-			res.json({ user });
+	User.findAll({
+		where: {
+			organization_id: org_id
+		}
+	})
+		.then(users => {
+			res.json({ users });
 		})
 		.catch(err => res.status(500).json({ err }));
+};
+
+// fetch user info using jwt
+const returnSelf = (req, res) => {
+	const user = {
+		user_id: req.user[0].dataValues.user_id,
+		firstname: req.user[0].dataValues.firstname,
+		lastname: req.user[0].dataValues.lastname,
+		username: req.user[0].dataValues.username,
+		email: req.user[0].dataValues.email,
+		org_id: req.user[0].dataValues.organization_id
+	};
+
+	res.json(user);
 };
 
 // update a user's info
@@ -162,7 +172,8 @@ export {
 	create,
 	login,
 	findAllUsers,
-	findById,
+	findAllUsersInOrg,
+	returnSelf,
 	update,
 	deleteUser
 };

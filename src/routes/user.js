@@ -1,17 +1,14 @@
 import passport from 'passport';
 import config from '../config/config';
 import { allowOnly } from '../services/routesHelper';
-import { create, login, findAllUsers,
-	findById, update, deleteUser
-} from '../controllers/user';
+import { create, login, findAllUsers, findAllUsersInOrg, returnSelf, update, deleteUser } from '../controllers/user';
 
 module.exports = (app) => {
 	// create a new user
 	app.post(
 		'/api/users/create',
-		// passport.authenticate('jwt', { session: false }),
-		// allowOnly(config.accessLevels.admin, create)
-		create
+		passport.authenticate('jwt', { session: false }),
+		allowOnly(config.accessLevels.admin, create)
 	);
 
 	// user login
@@ -26,13 +23,21 @@ module.exports = (app) => {
 		allowOnly(config.accessLevels.admin, findAllUsers)
 	);
 
-	// retrieve user by id
-	app.get(
-		'/api/users/:userId',
+	//retrieve all users belonging to organization
+	app.get('/api/users/:orgId',
 		passport.authenticate('jwt', {
 			session: false,
 		}),
-		allowOnly(config.accessLevels.admin, findById)
+		allowOnly(config.accessLevels.user, findAllUsersInOrg)
+	);
+
+	// retrieve user by JWT
+	app.get(
+		'/api/user',
+		passport.authenticate('jwt', {
+			session: false,
+		}),
+		allowOnly(config.accessLevels.admin, returnSelf)
 	);
 
 	// update a user with id
