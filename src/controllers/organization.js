@@ -44,16 +44,6 @@ const create = (req, res) => {
 	});
 };
 
-// fetch all users from organization
-//TODO - NOT DONE, needs to fetch all users that have a primary key of organization passed
-const findAllUsers = (req, res) => {
-	User.findAll()
-		.then(user => {
-			res.json({ user });
-		})
-		.catch(err => res.status(500).json({ err }));
-};
-
 // fetch all organizations
 const findAllOrganizations = (req, res) => {
 	Organization.findAll()
@@ -106,7 +96,6 @@ const deleteOrganization = (req, res) => {
 
 export {
 	create,
-	findAllUsers,
 	findAllOrganizations,
 	findById,
 	update,

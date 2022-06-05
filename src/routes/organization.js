@@ -1,7 +1,7 @@
 import passport from 'passport';
 import config from '../config/config';
 import { allowOnly } from '../services/routesHelper';
-import { create, findAllUsers, findAllOrganizations,
+import { create, findAllOrganizations,
 	findById, update, deleteOrganization
 } from '../controllers/organization';
 
@@ -11,15 +11,6 @@ module.exports = (app) => {
 		'/api/organizations/create',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.admin, create)
-	);
-
-	//retrieve all users belonging to organization Id
-	app.get(
-		'/api/organizations/users/:Id',
-		passport.authenticate('jwt', {
-			session: false
-		}),
-		allowOnly(config.accessLevels.admin, findAllUsers)
 	);
 
 	//retrieve all Organizations
