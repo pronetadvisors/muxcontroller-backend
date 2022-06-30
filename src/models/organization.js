@@ -1,6 +1,4 @@
-import {Data} from "@mux/mux-node/dist/data/data";
-
-export default (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
 	const Organization = sequelize.define(
 		'Organization',
 		{
