@@ -1,12 +1,14 @@
 import passport from 'passport';
 import config from '../config/config';
 import { allowOnly } from '../services/routesHelper';
-import { create, login, findAllUsers, findAllUsersInOrg, returnSelf, update, deleteUser } from '../controllers/user';
+import { create, login, findAllUsers, findAllUsersInOrg, returnSelf, update, deleteUser, avatar } from '../controllers/user';
+import { upload } from '../multer/index';
+
 
 module.exports = (app) => {
 	// create a new user
 	app.post(
-		'/api/users/create',
+		'/api/users',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.admin, create)
 	);
@@ -56,6 +58,18 @@ module.exports = (app) => {
 			session: false,
 		}),
 		allowOnly(config.accessLevels.admin, deleteUser)
+	);
+
+	// update users avatar_src
+	app.post(
+		'/api/users/avatar',
+		[
+			passport.authenticate('jwt', {
+				session: false,
+			}),
+			upload.single('image')
+		],
+		allowOnly(config.accessLevels.user, avatar)
 	);
 
 };

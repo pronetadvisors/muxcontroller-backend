@@ -25,7 +25,7 @@ const create = (req, res) => {
 
 	Organization.findAll({ where: { email } }).then(organization => {
 		if (organization.length) {
-			return res.status(400).json({ email: 'Email already exists!' });
+			return res.status(400).json({ msg: 'Email already exists!' });
 		} else {
 			let newOrganization = {
 				name,
@@ -81,7 +81,7 @@ const update = (req, res) => {
 		},
 		{ where: { id } }
 	)
-		.then(user => res.status(200).json({ user }))
+		.then(org => res.status(200).json({ org }))
 		.catch(err => res.status(500).json({ err }));
 };
 
@@ -90,8 +90,11 @@ const deleteOrganization = (req, res) => {
 	const id = req.params.Id;
 
 	Organization.destroy({ where: { id } })
-		.then(() => res.status.json({ msg: 'Organization has been deleted successfully!' }))
-		.catch(err => res.status(500).json({ msg: 'Failed to delete!' }));
+		.then(() => res.status(200).json({ msg: 'Organization has been deleted successfully!' }))
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({msg: 'Failed to delete!'});
+		});
 };
 
 export {

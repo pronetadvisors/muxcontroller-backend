@@ -19,8 +19,10 @@ const create = (req, res) => {
 		role,
 		email,
 		password,
+		organization_id,
 	} = req.body;
 
+	let avatar_src = 'default.png';
 	// check validation
 	if(!isValid) {
 		return res.status(400).json(errors);
@@ -37,6 +39,8 @@ const create = (req, res) => {
 				role,
 				email,
 				password,
+				organization_id,
+				avatar_src
 			};
 			bcrypt.genSalt(10, (err, salt) => {
 				bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -136,7 +140,8 @@ const returnSelf = (req, res) => {
 		lastname: req.user[0].dataValues.lastname,
 		username: req.user[0].dataValues.username,
 		email: req.user[0].dataValues.email,
-		org_id: req.user[0].dataValues.organization_id
+		org_id: req.user[0].dataValues.organization_id,
+		avatar_src: req.user[0].dataValues.avatar_src,
 	};
 
 	res.json(user);
@@ -168,6 +173,31 @@ const deleteUser = (req, res) => {
 		.catch(err => res.status(500).json({ msg: 'Failed to delete!' }));
 };
 
+const fs = require('fs');
+import path from "path";
+
+const avatar = (req, res) => {
+	const old_file_name = req.user[0].dataValues.avatar_src;
+
+	const user_id = req.user[0].dataValues.user_id;
+	const avatar_src = `/images/${req.file.filename}`;
+	User.update(
+		{
+			avatar_src
+		},
+		{ where: { user_id } }
+	)
+		.then(user => res.status(200).json({ user }))
+		.catch(err => res.status(500).json({ err}));
+
+	//Delete Old File
+	fs.unlink(path.join(__dirname, "../multer", old_file_name), (err) => {
+		if(err){
+			console.error(err);
+		}
+	});
+};
+
 export {
 	create,
 	login,
@@ -175,5 +205,6 @@ export {
 	findAllUsersInOrg,
 	returnSelf,
 	update,
-	deleteUser
+	deleteUser,
+	avatar
 };

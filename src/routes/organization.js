@@ -8,7 +8,7 @@ import { create, findAllOrganizations,
 module.exports = (app) => {
 	// create a new user
 	app.post(
-		'/api/organizations/create',
+		'/api/organizations',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.admin, create)
 	);

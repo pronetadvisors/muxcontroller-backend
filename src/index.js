@@ -10,7 +10,7 @@ app.use(express.json());
 let port = process.env.PORT || 3000;
 
 // make express look in the public directory for assets (css/js/img)
-app.use(express.static(__dirname + '/public'));
+app.use('/images', express.static(__dirname + '/multer/images/'));
 
 app.use(cors());
 
@@ -19,6 +19,7 @@ app.use(cors());
 models.sequelize.sync().then(() => {
 	console.log('Drop and Resync with {force: true}');
 });
+
 
 // passport middleware
 app.use(passport.initialize());
