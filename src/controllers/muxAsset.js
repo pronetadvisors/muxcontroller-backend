@@ -79,6 +79,18 @@ const getAssets = async (req, res) => {
 	res.send(assets);
 };
 
+// Get all assets in Organization
+const getAssetsInOrg = async (req, res) => {
+	const {
+		accessToken,
+		secret,
+	} = req.body;
+	const { Video } = new Mux(accessToken, secret);
+
+	const assets = Video.Assets.list({ limit: 100, page: 2 });
+	res.send(assets);
+};
+
 // Get Asset by Id
 const getAssetById = async (req, res) => {
 	const {
@@ -114,6 +126,7 @@ export {
 	createAssetPlaybackId,
 	deleteAssetPlaybackId,
 	getAssets,
+	getAssetsInOrg,
 	getAssetById,
 	getAssetPlaybackId
 };

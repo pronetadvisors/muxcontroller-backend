@@ -7,6 +7,7 @@ import {
 	createStreamPlaybackId,
 	deleteStreamPlaybackId,
 	getStreams,
+	getStreamsInOrg,
 	getStreamById,
 	resetStreamKey,
 	enableStream,
@@ -18,7 +19,7 @@ import {
 module.exports = (app) => {
 
 	app.post(
-		'/api/mux/streams/create',
+		'/api/mux/streams',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.admin, createStream)
 	);
@@ -44,13 +45,19 @@ module.exports = (app) => {
 	app.get(
 		'/api/mux/streams',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, getStreams)
+		allowOnly(config.accessLevels.user, getStreams)
+	);
+
+	app.get(
+		'/api/mux/streams/org/:orgId',
+		passport.authenticate('jwt', { session: false }),
+		allowOnly(config.accessLevels.admin, getStreamsInOrg)
 	);
 
 	app.get(
 		'/api/mux/streams/:streamId',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, getStreamById)
+		allowOnly(config.accessLevels.user, getStreamById)
 	);
 
 	app.post(
