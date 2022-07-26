@@ -1,22 +1,37 @@
 const Mux = require('@mux/mux-node');
 import { muxInfo } from "../services/muxHelper";
 
+import db from '../models';
+const Stream = db.Stream;
+
+
 const createStream = async (req, res) => {
+	const organization_id = req.user[0].dataValues.organization_id;
 	const {
 		mux_accessToken,
 		mux_secret,
-	} = await muxInfo(req.user[0].dataValues.organization_id);
+	} = await muxInfo(organization_id);
 	const {
-		visibility
+		name,
+		data
 	} = req.body;
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const LiveStream = await Video.LiveStreams.create({
-		playback_policy: visibility,
-		new_asset_settings: { playback_policy: visibility }
-	});
+	const LiveStream = await Video.LiveStreams.create(data);
 
-	res.send(LiveStream);
+	let newStream = {
+		name,
+		stream_id: LiveStream.id,
+		organization_id
+	};
+	Stream.create(newStream)
+		.then(() => {
+			LiveStream.name = name;
+			res.send(LiveStream);
+		})
+		.catch(err => {
+			res.status(500).json({ err });
+		});
 };
 
 const deleteStream = async (req, res) => {
@@ -63,17 +78,18 @@ const deleteStreamPlaybackId = async (req, res) => {
 
 // Get all LiveStreams
 const getStreams = async (req, res) => {
+	const organization_id = req.user[0].dataValues.organization_id;
 	const {
 		mux_accessToken,
 		mux_secret,
-	} = await muxInfo(req.user[0].dataValues.organization_id);
+	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
 	const streams = await Video.LiveStreams.list({});
 	res.send(streams);
 };
 
-// Get get streams by orgId
+// Get streams by orgId
 const getStreamsInOrg = async (req, res) => {
 	const {
 		mux_accessToken,

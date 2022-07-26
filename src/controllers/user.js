@@ -21,7 +21,7 @@ const create = (req, res) => {
 		organization_id,
 	} = req.body;
 
-	let avatar_src = 'default.png';
+	let avatar_src = '/images/default.png';
 	// check validation
 	if(!isValid) {
 		return res.status(400).json(errors);
@@ -87,8 +87,8 @@ const login = (req, res) => {
 				.compare(password, originalPassword)
 				.then(isMatch => {
 					if (isMatch) {
-						const { user_id, username } = user[0].dataValues;
-						const payload = { user_id, username }; //jwt payload
+						const { user_id, username, role } = user[0].dataValues;
+						const payload = { user_id, username, role }; //jwt payload
 
 						jwt.sign(payload, 'secret', {
 							expiresIn: 3600
@@ -96,7 +96,6 @@ const login = (req, res) => {
 							res.json({
 								success: true,
 								token: 'Bearer ' + token,
-								role: user[0].dataValues.role
 							});
 						});
 					} else {
@@ -141,6 +140,7 @@ const returnSelf = (req, res) => {
 		email: req.user[0].dataValues.email,
 		org_id: req.user[0].dataValues.organization_id,
 		avatar_src: req.user[0].dataValues.avatar_src,
+		role: req.user[0].dataValues.role,
 	};
 
 	res.json(user);

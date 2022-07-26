@@ -6,7 +6,7 @@ import { upload } from '../multer/index';
 
 
 module.exports = (app) => {
-	// create a new user
+	// create a new user from admin
 	app.post(
 		'/api/users',
 		passport.authenticate('jwt', { session: false }),
@@ -39,7 +39,7 @@ module.exports = (app) => {
 		passport.authenticate('jwt', {
 			session: false,
 		}),
-		allowOnly(config.accessLevels.admin, returnSelf)
+		allowOnly(config.accessLevels.user, returnSelf)
 	);
 
 	// update a user with id
