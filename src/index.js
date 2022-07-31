@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import cors from 'cors';
 import models from './models';
+import helmet from 'helmet';
 
 const app = express();
 
@@ -12,7 +13,12 @@ let port = process.env.PORT || 3000;
 // make express look in the public directory for assets (css/js/img)
 app.use('/images', express.static(__dirname + '/multer/images/'));
 
+
+// SECURITY
 app.use(cors());
+app.use(helmet());
+app.disable('x-powered-by');
+
 
 // force: true will drop the table if it already exits
 // models.sequelize.sync({ force: true }).then(() => {

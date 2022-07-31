@@ -21,13 +21,13 @@ module.exports = (app) => {
 	app.post(
 		'/api/mux/streams',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, createStream)
+		allowOnly(config.accessLevels.user, createStream)
 	);
 
 	app.delete(
 		'/api/mux/streams/:streamId',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, deleteStream)
+		allowOnly(config.accessLevels.user, deleteStream)
 	);
 
 	app.post(
