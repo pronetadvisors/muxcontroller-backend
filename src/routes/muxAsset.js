@@ -29,7 +29,7 @@ module.exports = (app) => {
 	app.delete(
 		'/api/mux/assets/:assetId',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, deleteAsset)
+		allowOnly(config.accessLevels.user, deleteAsset)
 	);
 
 	app.post(

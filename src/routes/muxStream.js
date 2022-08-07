@@ -81,6 +81,6 @@ module.exports = (app) => {
 	app.post(
 		'/api/mux/streams/complete/:streamId',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, completeStream)
+		allowOnly(config.accessLevels.user, completeStream)
 	);
 };

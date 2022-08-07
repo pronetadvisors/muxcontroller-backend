@@ -41,9 +41,12 @@ const deleteStream = async (req, res) => {
 	} = await muxInfo(req.user[0].dataValues.organization_id);
 	const streamId = req.params.streamId;
 	const { Video } = new Mux(mux_accessToken, mux_secret);
-
-	const result = await Video.LiveStreams.del(streamId);
-	res.send(result);
+	Stream.destroy({ where: { stream_id: streamId } })
+		.then(async () => {
+			const result = await Video.LiveStreams.del(streamId);
+			res.send(result);
+		})
+		.catch(() => res.status(500).json({ msg: 'Failed to delete!' }));
 };
 
 // Create playbackId for given StreamId

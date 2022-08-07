@@ -53,8 +53,12 @@ const deleteAsset = async (req, res) => {
 	} = await muxInfo(req.user[0].dataValues.organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const result = await Video.Assets.del(assetId);
-	res.send(result);
+	Asset.destroy({ where: { asset_id: assetId } })
+		.then(async () => {
+			const result = await Video.Assets.del(assetId);
+			res.send(result);
+		})
+		.catch(() => res.status(500).json({ msg: 'Failed to delete!' }));
 };
 
 // Create playbackId for given assetId
