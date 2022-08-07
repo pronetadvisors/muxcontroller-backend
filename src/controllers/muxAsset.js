@@ -5,10 +5,11 @@ import db from '../models';
 const Asset = db.Asset;
 
 const uploadAsset = async (req, res) => {
+	const organization_id = req.user[0].dataValues.organization_id;
 	const {
 		mux_accessToken,
 		mux_secret,
-	} = await muxInfo(req.user[0].dataValues.organization_id);
+	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
 	// More stuff here...
@@ -16,24 +17,31 @@ const uploadAsset = async (req, res) => {
 
 const createAsset = async (req, res) => {
 	const {
-		url,
-		visibility
+		data
 	} = req.body;
-	
+
+	const organization_id = req.user[0].dataValues.organization_id;
 	const {
 		mux_accessToken,
 		mux_secret,
-	} = await muxInfo(req.user[0].dataValues.organization_id);
+	} = await muxInfo(organization_id);
+
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const asset = await Video.Assets.create({
-		input: url,
-		"playback_policy": [
-			visibility // Public or Private
-		],
-	});
+	const asset = await Video.Assets.create(data);
 
-	res.send(asset);
+	let newAsset = {
+		asset_id: asset.id,
+		organization_id
+	};
+	Asset.create(newAsset)
+		.then(() => {
+			res.send(asset);
+		})
+		.catch(err => {
+			res.status(500).json({ err });
+		});
+
 };
 
 const deleteAsset = async (req, res) => {
@@ -88,7 +96,7 @@ const getAssets = async (req, res) => {
 	} = await muxInfo(req.user[0].dataValues.organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = Video.Assets.list({ limit: 100, page: 2 });
+	const assets = await Video.Assets.list();
 	res.send(assets);
 };
 
@@ -100,7 +108,7 @@ const getAssetsInOrg = async (req, res) => {
 	} = await muxInfo(req.user[0].dataValues.organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = Video.Assets.list({ limit: 100, page: 2 });
+	const assets = await Video.Assets.list({ limit: 100, page: 2 });
 	res.send(assets);
 };
 

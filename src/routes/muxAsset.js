@@ -1,5 +1,3 @@
-import {getStreamsInOrg} from "../controllers/muxStream";
-
 const passport = require("passport");
 const { allowOnly } = require("../services/routesHelper");
 const config = require("../config/config");
@@ -25,7 +23,7 @@ module.exports = (app) => {
 	app.post(
 		'/api/mux/assets',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, createAsset)
+		allowOnly(config.accessLevels.user, createAsset)
 	);
 
 	app.delete(
@@ -49,7 +47,7 @@ module.exports = (app) => {
 	app.get(
 		'/api/mux/assets',
 		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.admin, getAssets)
+		allowOnly(config.accessLevels.user, getAssets)
 	);
 
 	app.get(

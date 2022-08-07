@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
 	const Asset = sequelize.define(
 		'Asset',
 		{
-			name: DataTypes.STRING,
 			asset_id: DataTypes.STRING,
 		},
 		{}
