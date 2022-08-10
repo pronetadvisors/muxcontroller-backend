@@ -4,7 +4,6 @@ import cors from 'cors';
 import models from './models';
 import helmet from 'helmet';
 import "babel-polyfill";
-// require("babel-core/register");u
 
 
 const app = express();
