@@ -90,8 +90,19 @@ const getStreams = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const streams = await Video.LiveStreams.list({});
-	res.send(streams);
+	let streams = await Video.LiveStreams.list({});
+
+	Stream.findAll({ where: { organization_id } })
+		.then((resp) => {
+			streams.forEach(stream => {
+				resp.forEach((res_stream) => {
+					if(stream.id === res_stream.stream_id) {
+						stream["name"]= res_stream.name;
+					}
+				});
+			});
+			res.send(streams);
+		});
 };
 
 // Get streams by orgId
