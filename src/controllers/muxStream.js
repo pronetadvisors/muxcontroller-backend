@@ -79,7 +79,6 @@ const deleteStreamPlaybackId = async (req, res) => {
 	res.send(result);
 };
 
-//TODO - Append name to each stream.
 
 // Get all LiveStreams
 const getStreams = async (req, res) => {
