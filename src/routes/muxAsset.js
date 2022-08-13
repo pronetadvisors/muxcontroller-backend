@@ -10,7 +10,8 @@ import {
 	getAssets,
 	getAssetsInOrg,
 	getAssetById,
-	getAssetPlaybackId
+	getAssetPlaybackId,
+	enableMP4Support
 } from '../controllers/muxAsset';
 
 module.exports = (app) => {
@@ -66,5 +67,11 @@ module.exports = (app) => {
 		'/api/mux/assets/:assetId/playback/:playbackId',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.admin, getAssetPlaybackId)
+	);
+
+	app.post(
+		'/api/mux/assets/:assetId/mp4support',
+		passport.authenticate('jwt', { session: false }),
+		allowOnly(config.accessLevels.user, enableMP4Support)
 	);
 };

@@ -143,6 +143,18 @@ const getAssetPlaybackId = async (req, res) => {
 	res.send(playbackIdInfo);
 };
 
+const enableMP4Support = async (req, res) => {
+	const {
+		mux_accessToken,
+		mux_secret,
+	} = await muxInfo(req.user[0].dataValues.organization_id);
+	const assetId = req.params.assetId;
+	const { Video } = new Mux(mux_accessToken, mux_secret);
+
+	const Mp4Data = await Video.Assets.updateMp4Support(assetId, {mp4_support: "standard"});
+	res.send(Mp4Data);
+};
+
 
 export {
 	uploadAsset,
@@ -153,5 +165,6 @@ export {
 	getAssets,
 	getAssetsInOrg,
 	getAssetById,
-	getAssetPlaybackId
+	getAssetPlaybackId,
+	enableMP4Support
 };
