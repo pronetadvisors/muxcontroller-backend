@@ -130,6 +130,21 @@ const findAllUsersInOrg = (req, res) => {
 		.catch(err => res.status(500).json({ err }));
 };
 
+// fetch all users in Self organization
+const findAllUsersSelf = (req, res) => {
+	const organization_id = req.user[0].dataValues.organization_id;
+
+	User.findAll({
+		where: {
+			organization_id
+		}
+	})
+		.then(users => {
+			res.json({ users });
+		})
+		.catch(err => res.status(500).json({ err }));
+};
+
 // fetch user info using jwt
 const returnSelf = (req, res) => {
 	const user = {
@@ -202,6 +217,7 @@ export {
 	login,
 	findAllUsers,
 	findAllUsersInOrg,
+	findAllUsersSelf,
 	returnSelf,
 	update,
 	deleteUser,

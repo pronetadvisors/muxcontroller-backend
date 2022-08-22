@@ -1,7 +1,7 @@
 import passport from 'passport';
 import config from '../config/config';
 import { allowOnly } from '../services/routesHelper';
-import { create, login, findAllUsers, findAllUsersInOrg, returnSelf, update, deleteUser, avatar } from '../controllers/user';
+import { create, login, findAllUsers, findAllUsersInOrg, findAllUsersSelf, returnSelf, update, deleteUser, avatar } from '../controllers/user';
 import { upload } from '../multer/index';
 
 
@@ -30,7 +30,15 @@ module.exports = (app) => {
 		passport.authenticate('jwt', {
 			session: false,
 		}),
-		allowOnly(config.accessLevels.user, findAllUsersInOrg)
+		allowOnly(config.accessLevels.admin, findAllUsersInOrg)
+	);
+
+	//retrieve all users in own organization
+	app.get('/api/usersSelf',
+		passport.authenticate('jwt', {
+			session: false,
+		}),
+		allowOnly(config.accessLevels.user, findAllUsersSelf)
 	);
 
 	// retrieve user by JWT
