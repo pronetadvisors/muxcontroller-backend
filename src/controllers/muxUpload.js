@@ -17,8 +17,10 @@ const createUpload = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
+	console.log(data);
 	const upload = await Video.Uploads.create(data);
 
+	console.log(upload);
 	let newAsset = {
 		name,
 		asset_id: upload.id,
