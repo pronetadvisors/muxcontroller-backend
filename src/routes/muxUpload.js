@@ -5,6 +5,7 @@ import {
 	createUpload,
 	listUploads,
 	deleteUpload,
+	assetCreated,
 } from '../controllers/muxUpload';
 
 module.exports = (app) => {
@@ -24,6 +25,12 @@ module.exports = (app) => {
 		'/api/mux/upload/:uploadId',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.user, deleteUpload)
+	);
+
+	app.get(
+		'/api/mux/upload/:uploadId/update',
+		passport.authenticate('jwt', { session: false }),
+		allowOnly(config.accessLevels.user, assetCreated)
 	);
 
 };
