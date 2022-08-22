@@ -5,7 +5,6 @@ import models from './models';
 import helmet from 'helmet';
 import "babel-polyfill";
 
-
 const app = express();
 
 app.use(express.json());
@@ -42,6 +41,7 @@ require('./routes/organization.js')(app);
 //Mux Routes
 require('./routes/muxStream.js')(app);
 require('./routes/muxAsset.js')(app);
+require('./routes/muxUpload.js')(app);
 //MISC Routes
 require('./routes/policyClass.js')(app);
 

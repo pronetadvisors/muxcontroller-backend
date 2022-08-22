@@ -96,7 +96,7 @@ const getStreams = async (req, res) => {
 			streams.forEach(stream => {
 				resp.forEach((res_stream) => {
 					if(stream.id === res_stream.stream_id) {
-						stream["name"]= res_stream.name;
+						stream["name"] = res_stream.name;
 					}
 				});
 			});

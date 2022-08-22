@@ -1,3 +1,5 @@
+import {or} from "sequelize";
+
 const Mux = require('@mux/mux-node');
 import { muxInfo } from "../services/muxHelper";
 
@@ -17,6 +19,7 @@ const uploadAsset = async (req, res) => {
 
 const createAsset = async (req, res) => {
 	const {
+		name,
 		data
 	} = req.body;
 
@@ -31,11 +34,13 @@ const createAsset = async (req, res) => {
 	const asset = await Video.Assets.create(data);
 
 	let newAsset = {
+		name,
 		asset_id: asset.id,
 		organization_id
 	};
 	Asset.create(newAsset)
 		.then(() => {
+			asset.name = name;
 			res.send(asset);
 		})
 		.catch(err => {
@@ -94,26 +99,50 @@ const deleteAssetPlaybackId = async (req, res) => {
 
 // Get all assets in user Organization
 const getAssets = async (req, res) => {
+	const organization_id = req.user[0].dataValues.organization_id;
 	const {
 		mux_accessToken,
 		mux_secret,
-	} = await muxInfo(req.user[0].dataValues.organization_id);
+	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
 	const assets = await Video.Assets.list();
-	res.send(assets);
+
+	Asset.findAll({ where: { organization_id }})
+		.then(resp => {
+			assets.forEach(asset => {
+				resp.forEach(res_assets => {
+					if(asset.id === res_assets.asset_id) {
+						asset["name"] = res_assets.name;
+					}
+				});
+			});
+			res.send(assets);
+		});
 };
 
 // Get all assets in Organization
 const getAssetsInOrg = async (req, res) => {
+	const organization_id = req.user[0].dataValues.organization_id;
 	const {
 		mux_accessToken,
 		mux_secret,
-	} = await muxInfo(req.user[0].dataValues.organization_id);
+	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = await Video.Assets.list({ limit: 100, page: 2 });
-	res.send(assets);
+	const assets = await Video.Assets.list();
+
+	Asset.findAll({ where: { organization_id }})
+		.then(resp => {
+			assets.forEach(asset => {
+				resp.forEach(res_assets => {
+					if(asset.id === res_assets.asset_id) {
+						asset["name"] = res_assets.name;
+					}
+				});
+			});
+			res.send(assets);
+		});
 };
 
 // Get Asset by Id
