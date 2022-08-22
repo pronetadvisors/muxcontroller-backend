@@ -28,7 +28,7 @@ module.exports = (app) => {
 	);
 
 	app.get(
-		'/api/mux/upload/:uploadId/update',
+		'/api/mux/upload/:uploadId',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.user, assetCreated)
 	);

@@ -71,7 +71,6 @@ const assetCreated = async (req, res) => {
 
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	console.log(req.params.uploadId);
 	// Video.Uploads.get(req.params.uploadId)
 	// 	.then(result => {
 	// 		console.log(result);
@@ -82,13 +81,15 @@ const assetCreated = async (req, res) => {
 	// 		res.status(500).send(err);
 	// 	});
 	const asset = await Video.Uploads.get(req.params.uploadId);
-	console.log("*** ASSET CREATED - 1 ***");
 	Asset.update(
 		{ asset_id: asset.asset_id },
 		{ where: { asset_id: asset.id }}
 	)
-		.then(res => res.status(200).json({ res }))
-		.catch(err => res.status(500).json({ err }));
+		.then(resp => res.status(200).json({ resp }))
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({err});
+		});
 };
 
 
