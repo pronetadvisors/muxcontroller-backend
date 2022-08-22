@@ -91,7 +91,7 @@ const login = (req, res) => {
 						const payload = { user_id, username, role }; //jwt payload
 
 						jwt.sign(payload, 'secret', {
-							expiresIn: 3600
+							expiresIn: 86400
 						}, (err, token) => {
 							res.json({
 								success: true,
