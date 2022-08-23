@@ -106,7 +106,7 @@ const getAssets = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = await Video.Assets.list();
+	const assets = await Video.Assets.list({ "limit": 500 });
 
 	Asset.findAll({ where: { organization_id }})
 		.then(resp => {
@@ -130,7 +130,7 @@ const getAssetsInOrg = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = await Video.Assets.list();
+	const assets = await Video.Assets.list({ "limit": 500 });
 
 	Asset.findAll({ where: { organization_id }})
 		.then(resp => {
