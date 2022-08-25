@@ -106,7 +106,12 @@ const getAssets = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = await Video.Assets.list({ "limit": 500 });
+	let assets = await Video.Assets.list({ "limit": 25, "page": 1 });
+	for(let i = 2; i < 1000; i++){
+		const assetsOnPage = await Video.Assets.list({ "limit": 25, "page": i});
+		if(assetsOnPage.length === 0) break;
+		assets = assets.concat(assetsOnPage);
+	}
 
 	Asset.findAll({ where: { organization_id }})
 		.then(resp => {
@@ -130,7 +135,12 @@ const getAssetsInOrg = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	const assets = await Video.Assets.list({ "limit": 500 });
+	let assets = await Video.Assets.list({ "limit": 100, "page": 1 });
+	for(let i = 2; i < 1000; i++){
+		const assetsOnPage = await Video.Assets.list({ "limit": 100, "page": i});
+		if(assetsOnPage.length === 0) break;
+		assets = assets.concat(assetsOnPage);
+	}
 
 	Asset.findAll({ where: { organization_id }})
 		.then(resp => {
