@@ -108,9 +108,14 @@ const getAssets = async (req, res) => {
 
 	let assets = await Video.Assets.list({ "limit": 25, "page": 1 });
 	for(let i = 2; i < 1000; i++){
-		const assetsOnPage = await Video.Assets.list({ "limit": 25, "page": i});
-		if(assetsOnPage.length === 0) break;
-		assets = assets.concat(assetsOnPage);
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		try {
+			const assetsOnPage = await Video.Assets.list({ "limit": 25, "page": i});
+			if(assetsOnPage.length === 0) break;
+			assets = assets.concat(assetsOnPage);
+		} catch(err){
+			console.log(err);
+		}
 	}
 
 	Asset.findAll({ where: { organization_id }})
