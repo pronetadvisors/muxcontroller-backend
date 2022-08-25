@@ -199,6 +199,12 @@ const enableMP4Support = async (req, res) => {
 	res.send(Mp4Data);
 };
 
+const resync = async (req, res) => {
+	// Admin Only
+	// Get all Organizations
+	// Connect to mux for each organization and compare to DB
+};
+
 
 export {
 	uploadAsset,
