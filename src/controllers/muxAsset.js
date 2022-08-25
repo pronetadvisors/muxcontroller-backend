@@ -106,11 +106,11 @@ const getAssets = async (req, res) => {
 	} = await muxInfo(organization_id);
 	const { Video } = new Mux(mux_accessToken, mux_secret);
 
-	let assets = await Video.Assets.list({ "limit": 25, "page": 1 });
-	for(let i = 2; i < 1000; i++){
+	let assets = await Video.Assets.list({ "limit": 100, "page": 1 });
+	for(let i = 2; i < 100; i++){
 		await new Promise(resolve => setTimeout(resolve, 1000));
 		try {
-			const assetsOnPage = await Video.Assets.list({ "limit": 25, "page": i});
+			const assetsOnPage = await Video.Assets.list({ "limit": 100, "page": i});
 			if(assetsOnPage.length === 0) break;
 			assets = assets.concat(assetsOnPage);
 		} catch(err){
