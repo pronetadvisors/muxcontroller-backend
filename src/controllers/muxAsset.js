@@ -199,6 +199,13 @@ const enableMP4Support = async (req, res) => {
 	res.send(Mp4Data);
 };
 
+// Edit Asset Name
+const updateName = async (req, res) => {
+	const assetId = req.params.assetId;
+	
+};
+
+
 const resync = async (req, res) => {
 	// Admin Only
 	// Get all Organizations
