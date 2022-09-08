@@ -209,39 +209,39 @@ const resync = async (req, res) => {
 	// Admin Only
 	// Get all Organizations
 	// Connect to mux for each organization and compare to DB
-	Organization.findAll()
-		.then(org => {
-			org.forEach(organization => {
-				const mux_accessToken = organization.dataValues.mux_accessToken;
-				const mux_secret = organization.dataValues.mux_secret;
-				const { Video } = new Mux(mux_accessToken, mux_secret);
-
-				let assets = await Video.Assets.list({ "limit": 100, "page": 1 });
-				for(let i = 2; i < 100; i++){
-					await new Promise(resolve => setTimeout(resolve, 1000));
-					try {
-						const assetsOnPage = await Video.Assets.list({ "limit": 100, "page": i});
-						if(assetsOnPage.length === 0) break;
-						assets = assets.concat(assetsOnPage);
-					} catch(err){
-						console.log(err);
-					}
-				}
-
-				Asset.findAll({ where: { organization_id }})
-					.then(resp => {
-						assets.forEach(asset => {
-							resp.forEach(res_assets => {
-								if(asset.id === res_assets.asset_id) {
-									asset["name"] = res_assets.name;
-								}
-							});
-						});
-						res.send(assets);
-					});
-			})
-		})
-		.catch(err => res.status(500).json({ err }));
+	// Organization.findAll()
+	// 	.then(org => {
+	// 		org.forEach(organization => {
+	// 			const mux_accessToken = organization.dataValues.mux_accessToken;
+	// 			const mux_secret = organization.dataValues.mux_secret;
+	// 			const { Video } = new Mux(mux_accessToken, mux_secret);
+	//
+	// 			let assets = await Video.Assets.list({ "limit": 100, "page": 1 });
+	// 			for(let i = 2; i < 100; i++){
+	// 				await new Promise(resolve => setTimeout(resolve, 1000));
+	// 				try {
+	// 					const assetsOnPage = await Video.Assets.list({ "limit": 100, "page": i});
+	// 					if(assetsOnPage.length === 0) break;
+	// 					assets = assets.concat(assetsOnPage);
+	// 				} catch(err){
+	// 					console.log(err);
+	// 				}
+	// 			}
+	//
+	// 			Asset.findAll({ where: { organization_id }})
+	// 				.then(resp => {
+	// 					assets.forEach(asset => {
+	// 						resp.forEach(res_assets => {
+	// 							if(asset.id === res_assets.asset_id) {
+	// 								asset["name"] = res_assets.name;
+	// 							}
+	// 						});
+	// 					});
+	// 					res.send(assets);
+	// 				});
+	// 		})
+	// 	})
+	// 	.catch(err => res.status(500).json({ err }));
 
 };
 
