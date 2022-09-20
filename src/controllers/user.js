@@ -183,8 +183,8 @@ const deleteUser = (req, res) => {
 	const user_id = req.params.userId;
 
 	User.destroy({ where: { user_id } })
-		.then(() => res.status.json({ msg: 'User has been deleted successfully!' }))
-		.catch(err => res.status(500).json({ msg: 'Failed to delete!' }));
+		.then(() => res.status(200).json({ msg: 'User has been deleted successfully!' }))
+		.catch(() => res.status(500).json({ msg: 'Failed to delete!' }));
 };
 
 const fs = require('fs');
