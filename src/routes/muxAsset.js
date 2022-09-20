@@ -78,7 +78,7 @@ module.exports = (app) => {
 
 	app.get(
 		'/api/mux/assets/sync',
-		passport.authenticate('jwt', { session: false }),
-		allowOnly(config.accessLevels.user, resync)
+		// passport.authenticate('jwt', { session: false }),
+		resync
 	);
 };
