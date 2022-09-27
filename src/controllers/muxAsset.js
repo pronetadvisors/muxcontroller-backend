@@ -247,6 +247,20 @@ const resync = async (req, res) => {
 									.catch(err => res.status(500).json({ msg: 'Failed to delete!' }));
 							}
 						});
+
+						muxAssetIDs.forEach(assetID => {
+							if(!dbAssetIDs.includes(assetID)){
+								let newAsset = {
+									name: "NULL",
+									asset_id: assetID,
+									organization_id: organization.id
+								};
+								Asset.create(newAsset)
+									.catch(err => {
+										res.status(500).json({ err });
+									});
+							}
+						});
 					});
 			});
 		})
