@@ -19,7 +19,7 @@ const createRelay = async (req, res) => {
 		const zone = 'us-central1';
 		const clusterName = 'srt-relay-cluster';
 
-		const overrides = ```
+		const overrides = `
 		{
 		  "spec": {
 			"template": {
@@ -42,18 +42,17 @@ const createRelay = async (req, res) => {
 			  }
 			}
 		  }
-		}'
-		```;
+		}`;
 
 		// Configure kubectl to use the appropriate cluster
-		exec(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName} --overrides='${overrides}'`, (error) => {
+		exec(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName}`, (error) => {
 			if (error) {
 				console.error(error);
 				res.status(500).json({ message: 'Error configuring kubectl', error: error.message });
 			} else {
 				// Run the kubectl create deployment command
 				const imageName = 'raajpatel229/srt-to-rtmp:latest';
-				exec(`kubectl create deployment ${name} --image=${imageName}`, (error, stdout, stderr) => {
+				exec(`kubectl create deployment ${name} --image=${imageName} --overrides='${overrides}'`, (error, stdout, stderr) => {
 					if (error) {
 						console.error(error);
 						res.status(500).json({ message: 'Error creating deployment', error: error.message });
