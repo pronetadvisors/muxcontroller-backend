@@ -62,13 +62,13 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 			ports: [
 				{
 					protocol: 'TCP',
-					port: port,
-					targetPort: port,
+					port: parseInt(port),
+					targetPort: parseInt(port),
 				},
 				{
 					protocol: 'TCP',
-					port: port,
-					targetPort: port,
+					port: parseInt(port),
+					targetPort: parseInt(port),
 				},
 			],
 			type: 'LoadBalancer',
