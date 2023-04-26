@@ -61,11 +61,13 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 			},
 			ports: [
 				{
+					name: 'srt_tcp',
 					protocol: 'TCP',
 					port: parseInt(port),
 					targetPort: parseInt(port),
 				},
 				{
+					name: 'srt_tcp',
 					protocol: 'UDP',
 					port: parseInt(port),
 					targetPort: parseInt(port),
