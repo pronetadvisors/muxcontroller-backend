@@ -4,7 +4,8 @@ const config = require("../config/config");
 import {
 	createRelay,
 	deleteRelay,
-	getRelaysInOrg
+	getRelaysInOrg,
+	getRelayExpose
 } from '../controllers/relay';
 
 
@@ -25,5 +26,11 @@ module.exports = (app) => {
 		'/api/relays',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.user, getRelaysInOrg)
+	);
+
+	app.get(
+		'/api/relay_ep/:relayName',
+		passport.authenticate('jwt', { session: false }),
+		allowOnly(config.accessLevels.user, getRelayExpose)
 	);
 };
