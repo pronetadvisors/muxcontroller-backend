@@ -15,12 +15,38 @@ const createRelay = async (req, res) => {
 
 	// Create Relay in GCP
 	try {
-		const projectName = 'YOUR_PROJECT_NAME';
-		const zone = 'YOUR_ZONE';
-		const clusterName = 'YOUR_CLUSTER_NAME';
+		const projectName = 'noc4-relays';
+		const zone = 'us-central1';
+		const clusterName = 'srt-relay-cluster';
+
+		const overrides = ```
+		{
+		  "spec": {
+			"template": {
+			  "spec": {
+				"containers": [
+				  {
+					"name": "srt-relay",
+					"env": [
+					  {
+						"name": "RTMP_URL",
+						"value": "${destination_url}"
+					  },
+					  {
+						"name": "SRT_URL",
+						"value": "srt://:${port}"
+					  }
+					]
+				  }
+				]
+			  }
+			}
+		  }
+		}'
+		```;
 
 		// Configure kubectl to use the appropriate cluster
-		exec(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName}`, (error) => {
+		exec(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName} --overrides='${overrides}'`, (error) => {
 			if (error) {
 				console.error(error);
 				res.status(500).json({ message: 'Error configuring kubectl', error: error.message });
