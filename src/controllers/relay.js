@@ -66,7 +66,7 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 					targetPort: parseInt(port),
 				},
 				{
-					protocol: 'TCP',
+					protocol: 'UDP',
 					port: parseInt(port),
 					targetPort: parseInt(port),
 				},
