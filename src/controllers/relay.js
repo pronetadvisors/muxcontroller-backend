@@ -171,7 +171,7 @@ async function getServiceInfo(projectName, zone, clusterName, serviceName) {
 		const ip = serviceInfo.status.loadBalancer.ingress[0].ip;
 		// const port = serviceInfo.spec.ports[0].port;
 
-		return ip;
+		return { ip };
 	} catch (error) {
 		console.error(error);
 		throw new Error('Error getting service information');
@@ -186,7 +186,7 @@ const getRelayExpose = async (req, res) => {
 
 	try {
 		const serviceInfo = await getServiceInfo(projectName, zone, clusterName, serviceName);
-		res.send(serviceInfo);
+		res.json(serviceInfo);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
