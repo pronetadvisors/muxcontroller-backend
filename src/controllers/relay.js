@@ -95,8 +95,8 @@ const getRelaysInOrg = async (req, res) => {
 };
 
 const deleteRelay = async (req, res) => {
-	const relayId = req.params.relayId;
-	Relay.destroy({ where: { relay_id: relayId } })
+	const relayName = req.params.relayName;
+	Relay.destroy({ where: { name: relayName } })
 		.then(() => {
 			res.send({ msg: 'Deleted successfully!' });
 		})

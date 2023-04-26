@@ -16,7 +16,7 @@ module.exports = (app) => {
 	);
 
 	app.delete(
-		'/api/relay',
+		'/api/relay/:relayName',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.user, deleteRelay)
 	);
