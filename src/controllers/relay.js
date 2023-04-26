@@ -1,8 +1,57 @@
 const { exec } = require('child_process');
+const yaml = require('js-yaml');
+const fs = require('fs');
 
 import db from '../models';
 const Relay = db.Relay;
 
+
+async function createTempManifestFile(name, imageName, destination_url, port) {
+	const manifest = {
+		apiVersion: 'apps/v1',
+		kind: 'Deployment',
+		metadata: {
+			name: name,
+		},
+		spec: {
+			selector: {
+				matchLabels: {
+					app: name,
+				},
+			},
+			template: {
+				metadata: {
+					labels: {
+						app: name,
+					},
+				},
+				spec: {
+					containers: [
+						{
+							name: 'srt-relay',
+							image: imageName,
+							env: [
+								{
+									name: 'RTMP_URL',
+									value: destination_url,
+								},
+								{
+									name: 'SRT_URL',
+									value: `srt://:${port}`,
+								},
+							],
+						},
+					],
+				},
+			},
+		},
+	};
+
+	const yamlStr = yaml.dump(manifest);
+	const tempFilePath = `/tmp/${name}_manifest.yaml`;
+	fs.writeFileSync(tempFilePath, yamlStr);
+	return tempFilePath;
+}
 
 const createRelay = async (req, res) => {
 	const organization_id = req.user[0].dataValues.organization_id;
@@ -18,31 +67,9 @@ const createRelay = async (req, res) => {
 		const projectName = 'noc4-relays';
 		const zone = 'us-central1';
 		const clusterName = 'srt-relay-cluster';
+		const imageName = 'raajpatel229/srt-to-rtmp:latest';
 
-		const overrides = `
-		{
-		  "spec": {
-			"template": {
-			  "spec": {
-				"containers": [
-				  {
-					"name": "srt-relay",
-					"env": [
-					  {
-						"name": "RTMP_URL",
-						"value": "${destination_url}"
-					  },
-					  {
-						"name": "SRT_URL",
-						"value": "srt://:${port}"
-					  }
-					]
-				  }
-				]
-			  }
-			}
-		  }
-		}`;
+		const tempManifestFile = await createTempManifestFile(name, imageName, destination_url, port);
 
 		// Configure kubectl to use the appropriate cluster
 		exec(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName}`, (error) => {
@@ -51,8 +78,7 @@ const createRelay = async (req, res) => {
 				res.status(500).json({ message: 'Error configuring kubectl', error: error.message });
 			} else {
 				// Run the kubectl create deployment command
-				const imageName = 'raajpatel229/srt-to-rtmp:latest';
-				exec(`kubectl create deployment ${name} --image=${imageName} --overrides='${overrides}'`, (error, stdout, stderr) => {
+				exec(`kubectl apply -f ${tempManifestFile}`, (error) => {
 					if (error) {
 						console.error(error);
 						res.status(500).json({ message: 'Error creating deployment', error: error.message });
