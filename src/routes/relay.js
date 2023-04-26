@@ -22,7 +22,7 @@ module.exports = (app) => {
 	);
 
 	app.get(
-		'/api/relay',
+		'/api/relays',
 		passport.authenticate('jwt', { session: false }),
 		allowOnly(config.accessLevels.user, getRelaysInOrg)
 	);

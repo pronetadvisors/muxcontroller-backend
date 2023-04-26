@@ -3,7 +3,7 @@ import passport from 'passport';
 import cors from 'cors';
 import models from './models';
 import helmet from 'helmet';
-import "babel-polyfill";
+// import "babel-polyfill";
 
 const app = express();
 
@@ -42,6 +42,8 @@ require('./routes/organization.js')(app);
 require('./routes/muxStream.js')(app);
 require('./routes/muxAsset.js')(app);
 require('./routes/muxUpload.js')(app);
+//SRT Routes
+require('./routes/relay.js')(app);
 //MISC Routes
 require('./routes/policyClass.js')(app);
 
