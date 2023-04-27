@@ -61,11 +61,11 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 		},
 	};
 
-	const service = {
+	const tcpService = {
 		apiVersion: 'v1',
 		kind: 'Service',
 		metadata: {
-			name: `${name}-service`,
+			name: `${name}-tcp-service`,
 		},
 		spec: {
 			selector: {
@@ -78,6 +78,23 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 					port: parseInt(port),
 					targetPort: parseInt(port),
 				},
+			],
+			type: 'LoadBalancer',
+			loadBalancerIP: '34.172.5.27', // Your reserved static IP for TCP
+		},
+	};
+
+	const udpService = {
+		apiVersion: 'v1',
+		kind: 'Service',
+		metadata: {
+			name: `${name}-udp-service`,
+		},
+		spec: {
+			selector: {
+				app: name,
+			},
+			ports: [
 				{
 					name: 'srt-udp',
 					protocol: 'UDP',
@@ -86,13 +103,14 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 				},
 			],
 			type: 'LoadBalancer',
-			loadBalancerIP: '34.172.5.27',
+			loadBalancerIP: '34.172.5.28', // Your reserved static IP for UDP
 		},
 	};
 
 	const deploymentYaml = yaml.dump(manifest);
-	const serviceYaml = yaml.dump(service);
-	const yamlStr = `${deploymentYaml}---\n${serviceYaml}`;
+	const tcpServiceYaml = yaml.dump(tcpService);
+	const udpServiceYaml = yaml.dump(udpService);
+	const yamlStr = `${deploymentYaml}---\n${tcpServiceYaml}---\n${udpServiceYaml}`;
 	const tempFilePath = `/tmp/${name}_manifest.yaml`;
 	fs.writeFileSync(tempFilePath, yamlStr);
 	return tempFilePath;
