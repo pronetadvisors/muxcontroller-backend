@@ -38,8 +38,8 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 									value: destination_url,
 								},
 								{
-									name: 'SRT_URL',
-									value: `srt://:${port}`,
+									name: 'PORT',
+									value: `${port}`,
 								},
 							],
 						},
@@ -74,6 +74,7 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 				},
 			],
 			type: 'LoadBalancer',
+			loadBalancerIP: '34.172.5.27',
 		},
 	};
 
