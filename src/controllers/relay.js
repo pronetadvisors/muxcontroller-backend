@@ -32,6 +32,18 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 						{
 							name: 'srt-relay',
 							image: imageName,
+							ports: [
+								{
+									name: 'srt-tcp',
+									containerPort: parseInt(port),
+									protocol: 'TCP',
+								},
+								{
+									name: 'srt-udp',
+									containerPort: parseInt(port),
+									protocol: 'UDP',
+								},
+							],
 							env: [
 								{
 									name: 'RTMP_URL',
