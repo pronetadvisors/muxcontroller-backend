@@ -103,7 +103,7 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 				},
 			],
 			type: 'LoadBalancer',
-			loadBalancerIP: '34.172.5.28', // Your reserved static IP for UDP
+			loadBalancerIP: '34.172.5.27', // Your reserved static IP for UDP
 		},
 	};
 
@@ -215,7 +215,7 @@ const getRelayExpose = async (req, res) => {
 	const projectName = 'noc4-relays';
 	const zone = 'us-central1';
 	const clusterName = 'srt-relay-cluster';
-	const serviceName = req.params.relayName + '-service';
+	const serviceName = req.params.relayName + '-tcp-service';
 
 	try {
 		const serviceInfo = await getServiceInfo(projectName, zone, clusterName, serviceName);
