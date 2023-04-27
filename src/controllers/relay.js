@@ -54,6 +54,34 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 									value: `${port}`,
 								},
 							],
+							volumeMounts: [
+								{
+									name: 'gcs-bucket',
+									mountPath: '/data',
+								},
+							],
+						},
+					],
+					initContainers: [
+						{
+							name: 'gcsfuse',
+							image: 'gcr.io/google-containers/gcsfuse-amd64:latest',
+							command: ['gcsfuse', '-o', 'nonempty', 'k8s-relays', '/data'],
+							securityContext: {
+								privileged: true,
+							},
+							volumeMounts: [
+								{
+									name: 'gcs-bucket',
+									mountPath: '/data',
+								},
+							],
+						},
+					],
+					volumes: [
+						{
+							name: 'gcs-bucket',
+							emptyDir: {},
 						},
 					],
 				},
