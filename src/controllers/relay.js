@@ -54,6 +54,16 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 									value: `${port}`,
 								},
 							],
+							resources: {
+								requests: {
+									cpu: '200m', // Request 200 millicores (0.2 core)
+									memory: '128Mi', // Request 128 MiB
+								},
+								limits: {
+									cpu: '500m', // Limit to 500 millicores (0.5 core)
+									memory: '256Mi', // Limit to 256 MiB
+								},
+							},
 						},
 					],
 				},
