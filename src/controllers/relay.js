@@ -194,11 +194,33 @@ const getRelaysInOrg = async (req, res) => {
 
 const deleteRelay = async (req, res) => {
 	const relayName = req.params.relayName;
-	Relay.destroy({ where: { name: relayName } })
-		.then(() => {
-			res.send({ msg: 'Deleted successfully!' });
-		})
-		.catch(() => res.status(500).json({ msg: 'Failed to delete!' }));
+
+	const projectName = 'noc4-relays';
+	const zone = 'us-central1';
+	const clusterName = 'srt-relay-cluster';
+
+	try {
+		// Configure kubectl to use the appropriate cluster
+		await execP(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName}`);
+
+		// Delete the deployment
+		await execP(`kubectl delete deployment ${relayName}`);
+
+		// Delete the services
+		await execP(`kubectl delete service ${relayName}-tcp-service`);
+		await execP(`kubectl delete service ${relayName}-udp-service`);
+
+		// Delete Relay in DB
+		Relay.destroy({ where: { name: relayName } })
+			.then(() => {
+				res.send({ msg: 'Deleted successfully!' });
+			})
+			.catch(() => res.status(500).json({ msg: 'Failed to delete!' }));
+
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({message: 'Error deleting deployment and services', error: error.message});
+	}
 };
 
 async function getServiceInfo(projectName, zone, clusterName, serviceName) {
