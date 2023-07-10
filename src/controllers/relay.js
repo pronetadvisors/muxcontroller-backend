@@ -192,6 +192,17 @@ const getRelaysInOrg = async (req, res) => {
 		});
 };
 
+const getRelaysByOrgId = async (req, res) => {
+	const org_id = req.params.org_id;
+	Relay.findAll({ where: { organization_id: org_id } })
+		.then(relays => {
+			res.send(relays);
+		})
+		.catch(err => {
+			res.status(500).json({ err });
+		});
+};
+
 const deleteRelay = async (req, res) => {
 	const relayName = req.params.relayName;
 
@@ -262,5 +273,6 @@ export {
 	createRelay,
 	getRelaysInOrg,
 	deleteRelay,
-	getRelayExpose
+	getRelayExpose,
+	getRelaysByOrgId
 };
