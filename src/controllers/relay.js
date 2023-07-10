@@ -193,7 +193,7 @@ const getRelaysInOrg = async (req, res) => {
 };
 
 const getRelaysByOrgId = async (req, res) => {
-	const org_id = req.params.org_id;
+	const org_id = req.params.orgId;
 	Relay.findAll({ where: { organization_id: org_id } })
 		.then(relays => {
 			res.send(relays);
