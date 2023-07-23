@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
 			name: DataTypes.STRING,
 			port: DataTypes.INTEGER,
 			stream_name: DataTypes.STRING,
-			destination_url: DataTypes.STRING,
+			destination_urls: DataTypes.STRING,
 		},
 		{}
 	);

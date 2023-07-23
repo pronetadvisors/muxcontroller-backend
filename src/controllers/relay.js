@@ -8,7 +8,7 @@ import db from '../models';
 const Relay = db.Relay;
 
 
-async function createTempManifestFile(name, imageName, destination_url, port) {
+async function createTempManifestFile(name, imageName, destination_urls, port) {
 	const manifest = {
 		apiVersion: 'apps/v1',
 		kind: 'Deployment',
@@ -46,11 +46,11 @@ async function createTempManifestFile(name, imageName, destination_url, port) {
 							],
 							env: [
 								{
-									name: 'RTMP_URL',
-									value: destination_url,
+									name: 'RTMP_URLS',
+									value: `${destination_urls}`,
 								},
 								{
-									name: 'PORT',
+									name: 'SRT_PORT',
 									value: `${port}`,
 								},
 							],
@@ -132,7 +132,7 @@ const createRelay = async (req, res) => {
 		name,
 		port,
 		stream_name,
-		destination_url
+		destination_urls
 	} = req.body;
 
 	// Create Relay in GCP
@@ -142,7 +142,7 @@ const createRelay = async (req, res) => {
 		const clusterName = 'srt-relay-cluster';
 		const imageName = 'raajpatel229/srt-to-rtmp:latest';
 
-		const tempManifestFile = await createTempManifestFile(name, imageName, destination_url, port);
+		const tempManifestFile = await createTempManifestFile(name, imageName, destination_urls, port);
 
 		// Configure kubectl to use the appropriate cluster
 		exec(`gcloud container clusters get-credentials ${clusterName} --zone ${zone} --project ${projectName}`, (error) => {
@@ -161,7 +161,7 @@ const createRelay = async (req, res) => {
 							name,
 							port,
 							stream_name,
-							destination_url,
+							destination_urls,
 							organization_id
 						};
 						Relay.create(newRelay)

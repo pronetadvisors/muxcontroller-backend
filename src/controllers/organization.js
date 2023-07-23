@@ -1,5 +1,6 @@
 import db from '../models';
 const Organization = db.Organization;
+const User = db.User;
 
 // load input validation
 import validateCreateOrganizationForm from '../validation/createOrganization';
@@ -86,7 +87,16 @@ const deleteOrganization = (req, res) => {
 	const id = req.params.Id;
 
 	Organization.destroy({ where: { id } })
-		.then(() => res.status(200).json({ msg: 'Organization has been deleted successfully!' }))
+		.then(() => {
+			User.destroy({ where: { organizationId: id } })
+				.then(() => {
+					res.status(200).json({ msg: 'Organization has been deleted successfully!' });
+				})
+				.catch(err => {
+					console.log(err);
+					res.status(500).json({msg: 'Failed to delete!'});
+				});
+		})
 		.catch(err => {
 			console.log(err);
 			res.status(500).json({msg: 'Failed to delete!'});
